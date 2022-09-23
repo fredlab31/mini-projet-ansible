@@ -1,0 +1,39 @@
+---
+# tasks file for wordpress
+
+    - name: Download et unpack de l'archive de wordpress.org
+      unarchive:
+        src: "{{ wordpress_source }}"
+        dest: "/home/{{ user }}"
+        remote_src: yes
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 'u+rwx,g+rwx'
+
+    - name: Déplacer les fichiers dans le dossier web d'Apache
+      copy:
+        src: "/home/{{ user }}/wordpress/"
+        dest: "{{ web_folder }}"
+        remote_src: yes
+        owner: apache
+        group: apache
+        mode: u=rwx,g=rwx
+
+    - name: Générer le fichier wp-config.php
+      vars:
+        config_db_name: "{{ mysql_db_name }}"
+        config_db_user: "{{ mysql_db_user }}"
+        config_db_password: "{{ mysql_db_user_password }}"
+      template:
+        src: templates/wp-config.php.j2
+        dest: "{{ web_folder }}/wp-config.php"
+        owner: apache
+        group: apache
+        mode: u=rwx,g=rwx
+
+    - name: Supprimer les fichiers source
+      file:
+        path: "/home/{{ user }}/wordpress"
+        state: absent
+
+

@@ -1,0 +1,11 @@
+---
+- name : Déploiement de WordPress via les rôles
+  hosts: all
+  become: yes
+  vars_files:
+    - files/secrets/credentials.yml
+    
+  roles:
+    - php
+    - mysql
+    - wordpress

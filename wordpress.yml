@@ -1,0 +1,46 @@
+---
+- name: "Installation de Wordpress"
+  hosts: prod
+  become: yes
+
+  vars_files:
+    - files/secrets/credentials.yml
+
+  tasks:
+
+    - name: Download et unpack de l'archive de wordpress.org
+      unarchive:
+        src: http://WordPress.org/latest.tar.gz
+        dest: "/home/{{ user }}"
+        remote_src: yes
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 'u+rwx,g+rwx'
+
+    - name: Déplacer les fichiers sur /var/www/html
+      copy:
+        src: "/home/{{ user }}/wordpress/"
+        dest: /var/www/html
+        remote_src: yes
+        owner: apache
+        group: apache
+        mode: u=rwx,g=rwx
+
+    - name: Générer le fichier wp-config.php
+      vars:
+        config_db_name: "{{ mysql_db_name }}"
+        config_db_user: "{{ mysql_db_user }}"
+        config_db_password: "{{ mysql_db_user_password }}"
+      template:
+        src: templates/wp-config.php.j2
+        dest: /var/www/html/wp-config.php
+        owner: apache
+        group: apache
+        mode: u=rwx,g=rwx
+
+    - name: Supprimer les fichiers source
+      file:
+        path: "/home/{{ user }}/wordpress"
+        state: absent
+
+

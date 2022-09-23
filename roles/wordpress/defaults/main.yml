@@ -1,0 +1,10 @@
+---
+# defaults file for wordpress
+
+wordpress_source: http://WordPress.org/latest.tar.gz
+user: user
+web_folder: /var/www/html
+mysql_db_user: admin
+mysql_db_user_password: admin_pass
+mysql_db_name: db
+

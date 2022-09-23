@@ -1,0 +1,50 @@
+---
+# tasks file for mysql
+
+    - name: Installation de MariaDB
+      yum:
+        name:
+          - mariadb-server
+          - python2-PyMySQL
+        state: present
+
+    - name: Start et enable du daemon MariaDB
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    - name: Définition du mot de passe root de Mysql
+      mysql_user:
+        check_implicit_admin: true
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        user: root
+        password: "{{ mysql_root_password }}"
+        host: localhost
+
+    - name: Creation d'un nouveau user pour Mysql, avec tous les droits
+      mysql_user:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        name: "{{ mysql_db_user }}"
+        password: "{{ mysql_db_user_password }}"
+        priv: '*.*:ALL'
+        state: present
+
+    - name: Empêcher de se logger en root à distance sur Mysql
+      mysql_user:
+        check_implicit_admin: true
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        user: root
+        host: "{{ ansible_fqdn }}"
+        state: absent
+
+    - name: Creation d'une nouvelle DB 'wordpress'
+      mysql_db:
+        login_user: "{{ mysql_db_user }}"
+        login_password: "{{ mysql_db_user_password }}"
+        name: "{{ mysql_db_name }}"
+        state: present
+

@@ -1,0 +1,7 @@
+---
+- name: "PHP / Apache"
+  import_playbook: php.yml
+- name: "MariaDB (Mysql)"
+  import_playbook: mysql.yml
+- name: "WordPress"
+  import_playbook: wordpress.yml
