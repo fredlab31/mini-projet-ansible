@@ -6,10 +6,10 @@ Install Mysql on CentOS
 Role Variables
 --------------
 
-mysql_root_password: Password for the root user of mysql
-mysql_db_user: Name of the new admin account created during install
-mysql_db_user_password: Password for the new account
-mysql_db_name: Database name
+mysql_root_password: Password for the root user of mysql  
+mysql_db_user: Name of the new admin account created during install  
+mysql_db_user_password: Password for the new account  
+mysql_db_name: Database name  
 
 Example Playbook
 ----------------
